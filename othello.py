@@ -28,7 +28,8 @@ class othello():
     def find_red(self):
         for y in range(self.height):
             for x in range(self.width):
-                if self.search(y,x)!=None:
+                # print(self.search(y,x))
+                if self.board[y][x]=='.' and self.search(y,x)!=None:
                     self.board[y][x]='R'
         return
 
@@ -36,16 +37,16 @@ class othello():
     def explorer(self,origin,now_pos,vec):
         # そもそも範囲外の場合
         if not(0<=now_pos[0]<self.height and 0<=now_pos[1]<self.width):
-            return False
-        if self.board[now_pos[0]][now_pos[1]]=='.':
-            return False
+            return -1
+        if self.board[now_pos[0]][now_pos[1]]=='.' or self.board[now_pos[0]][now_pos[1]]=='R':
+            return -1
         elif self.board[now_pos[0]][now_pos[1]]==origin:
             return 0
         else:
             next_pos=self.add_vec(now_pos,vec)
             res=self.explorer(origin,next_pos,vec)
-            if res==False:
-                return False
+            if res==-1:
+                return -1
             else:
                 return res+1
 
@@ -57,7 +58,7 @@ class othello():
         origin=self.turn
         for vec in self.vec:
             res=self.explorer(origin,self.add_vec(origin_pos,vec),vec)
-            if res==False or res==0:
+            if res==-1 or res==0:
                 ans.append(0)
             else:
                 is_exist=True
@@ -98,16 +99,24 @@ def print_TwoDList(mylists):
 def main():
     othello1=othello(8,8)
     print_TwoDList(othello1.board)
-    othello1.board[0][3]='B'
-    othello1.board[1][3]='W'
-    othello1.board[2][3]='W'
-    othello1.board[3][3]='W'
-    othello1.board[4][3]='W'
-    othello1.board[5][3]='R'
-    othello1.put(5,3)
+    print('')
+    # othello1.board=[
+    #     ['.','.','.','B','.','.','.','.'],
+    #     ['.','.','.','W','.','.','.','.'],
+    #     ['.','.','.','W','.','.','.','.'],
+    #     ['B','W','W','.','W','W','W','B'],
+    #     ['.','.','.','W','.','.','.','.'],
+    #     ['.','.','.','W','.','.','.','.'],
+    #     ['.','.','.','W','.','.','.','.'],
+    #     ['.','.','.','B','.','.','.','.']]
+    othello1.put(3,3)
     print_TwoDList(othello1.board)
-    othello1.reverse(5,3)
+    print('')
+    print('search',othello1.search(3,6))
+    othello1.find_red()
+    # print(othello1.explorer('B',[4,3],[1,0]))
     print_TwoDList(othello1.board)
+    print('')
     return
 
 if __name__=='__main__':
