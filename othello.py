@@ -1,6 +1,7 @@
 # 面倒なので、座標系でも表記は統一していない(統一したい)
 
 import numpy
+import queue
 
 class othello():
     def __init__(self,h,w):
@@ -20,6 +21,9 @@ class othello():
         self.board[self.height//2][self.width//2-1]='W'
         self.board[self.height//2-1][self.width//2]='W'
         self.turn='B'
+        self.turn_queue=queue.Queue()
+        self.turn_queue.put('W')
+        self.turn_queue.put('B')
 
     # ベクトル計算
     def add_vec(self,a,b):
@@ -98,12 +102,20 @@ class othello():
             for x in range(self.width):
                 if self.board[y][x]=='R':
                     self.board[y][x]='.'
+    
+    def next_turn(self):
+        if self.turn_queue.empty():
+            return -1
+        next=self.turn_queue.get()
+        self.turn=next
+        self.turn_queue.put(next)
         
 def print_TwoDList(mylists):
     for mylist in mylists:
         for myobj in mylist:
             print(myobj,end=' ')
         print('')
+    print('')
     return
 
 def main():
@@ -129,12 +141,16 @@ def main():
 
 def main2():
     ot=othello(8,8)
-    ot.find_red()
-    print_TwoDList(ot.board)
-    print('')
-    ot.erase_red()
-    print_TwoDList(ot.board)
-    print('')
+    print(ot.turn)
+    ot.next_turn()
+    print(ot.turn)
+    ot.next_turn()
+    print(ot.turn)
+    ot.next_turn()
+    print(ot.turn)
+    ot.next_turn()
+    print(ot.turn)
+    ot.next_turn()
 
 if __name__=='__main__':
     main2()
