@@ -73,21 +73,31 @@ class othello():
         if self.board[y][x]!='R':
             return -1
         else:
-            if self.turn=='B':
-                self.board[y][x]='B'
-            else:
-                self.board[y][x]='W'
-        return 0
+            self.board[y][x]=self.turn
+            self.reverse(y,x)
+        return
 
     # (y,x)を中心に、駒を更新する（反転させる）
     def reverse(self,y,x):
-        origin=self.board[y][x]
-        for i in range(1,y+1):
-            if self.board[y-i][x]=='.':
-                break
-            if self.board[y-i][x]==origin:
-                for j in range(1,i+1):
-                    self.board[y-j][x]=origin
+        # それぞれの方向のひっくり返すべき駒の数
+        list_rev=self.search(y,x)
+        origin_pos=[y,x]
+        for i in range(8):
+            self.reverser(self.add_vec(origin_pos,self.vec[i]),self.vec[i],list_rev[i])
+    
+    # reverseの為の再帰関数
+    def reverser(self,now_pos,vec,num):
+        if num<=0:
+            return
+        self.board[now_pos[0]][now_pos[1]]=self.turn
+        self.reverser(self.add_vec(now_pos,vec),vec,num-1)
+        return
+
+    def erase_red(self):
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.board[y][x]=='R':
+                    self.board[y][x]='.'
         
 def print_TwoDList(mylists):
     for mylist in mylists:
@@ -100,24 +110,31 @@ def main():
     othello1=othello(8,8)
     print_TwoDList(othello1.board)
     print('')
-    # othello1.board=[
-    #     ['.','.','.','B','.','.','.','.'],
-    #     ['.','.','.','W','.','.','.','.'],
-    #     ['.','.','.','W','.','.','.','.'],
-    #     ['B','W','W','.','W','W','W','B'],
-    #     ['.','.','.','W','.','.','.','.'],
-    #     ['.','.','.','W','.','.','.','.'],
-    #     ['.','.','.','W','.','.','.','.'],
-    #     ['.','.','.','B','.','.','.','.']]
-    othello1.put(3,3)
+    othello1.board=[
+        ['B','.','.','B','.','.','B','.'],
+        ['.','W','.','W','.','W','.','.'],
+        ['.','.','W','W','W','.','.','.'],
+        ['B','W','W','.','W','W','W','B'],
+        ['.','.','W','W','W','.','.','.'],
+        ['.','W','.','W','.','B','.','.'],
+        ['B','.','.','W','.','.','W','.'],
+        ['.','.','.','B','.','.','.','B']]
     print_TwoDList(othello1.board)
     print('')
-    print('search',othello1.search(3,6))
     othello1.find_red()
-    # print(othello1.explorer('B',[4,3],[1,0]))
+    othello1.put(3,3)
     print_TwoDList(othello1.board)
     print('')
     return
 
+def main2():
+    ot=othello(8,8)
+    ot.find_red()
+    print_TwoDList(ot.board)
+    print('')
+    ot.erase_red()
+    print_TwoDList(ot.board)
+    print('')
+
 if __name__=='__main__':
-    main()
+    main2()
