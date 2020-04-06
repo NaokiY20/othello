@@ -1,7 +1,7 @@
 # 面倒なので、座標系でも表記は統一していない(統一したい)
 
 import numpy
-import queue
+from queue import Queue
 
 class othello():
     def __init__(self,h,w):
@@ -21,7 +21,7 @@ class othello():
         self.board[self.height//2][self.width//2-1]='W'
         self.board[self.height//2-1][self.width//2]='W'
         self.turn='B'
-        self.turn_queue=queue.Queue()
+        self.turn_queue=Queue()
         self.turn_queue.put('W')
         self.turn_queue.put('B')
 
