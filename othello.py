@@ -2,6 +2,7 @@
 
 import numpy
 from queue import Queue
+from copy import deepcopy
 
 class othello():
     def __init__(self,h,w):
@@ -29,12 +30,18 @@ class othello():
     def add_vec(self,a,b):
         return list(numpy.array(a)+numpy.array(b))
 
-    def add_marker(self):
+    def find_marker(self,turn):
+        ans=[]
         for y in range(self.height):
             for x in range(self.width):
-                # print(self.search(y,x))
-                if self.board[y][x]=='.' and self.search(y,x)!=None:
-                    self.board[y][x]='R'
+                if self.board[y][x]=='.' and self.search(y,x,turn)!=None:
+                   ans.append([y,x])
+        return ans
+
+    def add_marker(self):
+        marker_list=self.find_marker(self.turn)
+        for mark in marker_list:
+            self.board[mark[0]][mark[1]]='R'
         return
 
     # explorer関数　-1(False):ひっくり返せるものなし 自然数n:n個ひっくり返せる
@@ -55,11 +62,11 @@ class othello():
                 return res+1
 
     # (y,x)を中心に、どの方向にいくつひっくり返せるのかを調べる
-    def search(self,y,x):
+    def search(self,y,x,turn):
         is_exist=False
         ans=[]
         origin_pos=[y,x]
-        origin=self.turn
+        origin=turn
         for vec in self.vec:
             res=self.explorer(origin,self.add_vec(origin_pos,vec),vec)
             if res==-1 or res==0:
@@ -84,7 +91,7 @@ class othello():
     # (y,x)を中心に、駒を更新する（反転させる）
     def reverse(self,y,x):
         # それぞれの方向のひっくり返すべき駒の数
-        list_rev=self.search(y,x)
+        list_rev=self.search(y,x,self.turn)
         origin_pos=[y,x]
         for i in range(8):
             self.reverser(self.add_vec(origin_pos,self.vec[i]),self.vec[i],list_rev[i])
@@ -109,6 +116,19 @@ class othello():
         next=self.turn_queue.get()
         self.turn=next
         self.turn_queue.put(next)
+
+    def is_checkmate(self):
+        turn_list=[]
+        while not self.turn_queue.empty():
+            turn_list.append(self.turn_queue.get())
+        for turn in turn_list:
+            self.turn_queue.put(turn)
+        
+        for turn in turn_list:
+            if len(self.find_marker(turn))>0:
+                return False
+        return True
+            
         
 def print_TwoDList(mylists):
     for mylist in mylists:
@@ -133,10 +153,12 @@ def main():
         ['.','.','.','B','.','.','.','B']]
     print_TwoDList(othello1.board)
     print('')
+    print('checkmate',othello1.is_checkmate())
     othello1.add_marker()
     othello1.put(3,3)
     print_TwoDList(othello1.board)
     print('')
+    print('checkmate',othello1.is_checkmate())
     return
 
 def main2():
@@ -153,4 +175,4 @@ def main2():
     ot.next_turn()
 
 if __name__=='__main__':
-    main2()
+    main()
