@@ -117,6 +117,7 @@ class othello():
         self.turn=next
         self.turn_queue.put(next)
 
+    # ゲーム終了判定
     def is_checkmate(self):
         turn_list=[]
         while not self.turn_queue.empty():
@@ -128,6 +129,10 @@ class othello():
             if len(self.find_marker(turn))>0:
                 return False
         return True
+
+    # パスが必要かどうか
+    def is_need_pass(self):
+        return len(self.find_marker(self.turn))==0
             
         
 def print_TwoDList(mylists):
@@ -141,7 +146,6 @@ def print_TwoDList(mylists):
 def main():
     othello1=othello(8,8)
     print_TwoDList(othello1.board)
-    print('')
     othello1.board=[
         ['B','.','.','B','.','.','B','.'],
         ['.','W','.','W','.','W','.','.'],
@@ -152,12 +156,12 @@ def main():
         ['B','.','.','W','.','.','W','.'],
         ['.','.','.','B','.','.','.','B']]
     print_TwoDList(othello1.board)
-    print('')
+    print('pass',othello1.is_need_pass())
     print('checkmate',othello1.is_checkmate())
     othello1.add_marker()
     othello1.put(3,3)
     print_TwoDList(othello1.board)
-    print('')
+    print('pass',othello1.is_need_pass())
     print('checkmate',othello1.is_checkmate())
     return
 
