@@ -25,6 +25,8 @@ class othello():
         self.turn_queue=Queue()
         self.turn_queue.put('W')
         self.turn_queue.put('B')
+        self.turn_dict={'B':'Black','W':'White'}
+        self.turn_list=['B','W']
 
     # ベクトル計算
     def add_vec(self,a,b):
@@ -129,6 +131,17 @@ class othello():
             if len(self.find_marker(turn))>0:
                 return False
         return True
+    
+    def number_of_stone(self):
+        ans={}
+        for color in self.turn_list:
+            ans[color]=0
+        for line in self.board:
+            for square in line:
+                for turn in self.turn_list:
+                    if square==turn:
+                        ans[turn]+=1
+        return ans
 
     # パスが必要かどうか
     def is_need_pass(self):
