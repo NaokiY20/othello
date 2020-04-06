@@ -29,7 +29,7 @@ class othello():
     def add_vec(self,a,b):
         return list(numpy.array(a)+numpy.array(b))
 
-    def find_red(self):
+    def add_marker(self):
         for y in range(self.height):
             for x in range(self.width):
                 # print(self.search(y,x))
@@ -97,7 +97,7 @@ class othello():
         self.reverser(self.add_vec(now_pos,vec),vec,num-1)
         return
 
-    def erase_red(self):
+    def erace_marker(self):
         for y in range(self.height):
             for x in range(self.width):
                 if self.board[y][x]=='R':
@@ -133,7 +133,7 @@ def main():
         ['.','.','.','B','.','.','.','B']]
     print_TwoDList(othello1.board)
     print('')
-    othello1.find_red()
+    othello1.add_marker()
     othello1.put(3,3)
     print_TwoDList(othello1.board)
     print('')
