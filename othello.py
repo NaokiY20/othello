@@ -25,25 +25,25 @@ class othello():
         self.turn_index=0
 
     # ベクトル計算
-    def add_vec(self,a,b):
+    def _add_vec(self,a,b):
         return list(numpy.array(a)+numpy.array(b))
 
-    def find_marker(self,turn):
+    def _find_marker(self,turn):
         ans=[]
         for y in range(self.height):
             for x in range(self.width):
-                if self.board[y][x]=='.' and self.search(y,x,turn)!=None:
+                if self.board[y][x]=='.' and self._search(y,x,turn)!=None:
                    ans.append([y,x])
         return ans
 
     def add_marker(self):
-        marker_list=self.find_marker(self.turn)
+        marker_list=self._find_marker(self.turn)
         for mark in marker_list:
             self.board[mark[0]][mark[1]]='R'
         return
 
-    # explorer関数　-1(False):ひっくり返せるものなし 自然数n:n個ひっくり返せる
-    def explorer(self,origin,now_pos,vec):
+    # _explorer関数　-1(False):ひっくり返せるものなし 自然数n:n個ひっくり返せる
+    def _explorer(self,origin,now_pos,vec):
         # そもそも範囲外の場合
         if not(0<=now_pos[0]<self.height and 0<=now_pos[1]<self.width):
             return -1
@@ -52,21 +52,21 @@ class othello():
         elif self.board[now_pos[0]][now_pos[1]]==origin:
             return 0
         else:
-            next_pos=self.add_vec(now_pos,vec)
-            res=self.explorer(origin,next_pos,vec)
+            next_pos=self._add_vec(now_pos,vec)
+            res=self._explorer(origin,next_pos,vec)
             if res==-1:
                 return -1
             else:
                 return res+1
 
     # (y,x)を中心に、どの方向にいくつひっくり返せるのかを調べる
-    def search(self,y,x,turn):
+    def _search(self,y,x,turn):
         is_exist=False
         ans=[]
         origin_pos=[y,x]
         origin=turn
         for vec in self.vec:
-            res=self.explorer(origin,self.add_vec(origin_pos,vec),vec)
+            res=self._explorer(origin,self._add_vec(origin_pos,vec),vec)
             if res==-1 or res==0:
                 ans.append(0)
             else:
@@ -89,17 +89,17 @@ class othello():
     # (y,x)を中心に、駒を更新する（反転させる）
     def reverse(self,y,x):
         # それぞれの方向のひっくり返すべき駒の数
-        list_rev=self.search(y,x,self.turn)
+        list_rev=self._search(y,x,self.turn)
         origin_pos=[y,x]
         for i in range(8):
-            self.reverser(self.add_vec(origin_pos,self.vec[i]),self.vec[i],list_rev[i])
+            self._reverser(self._add_vec(origin_pos,self.vec[i]),self.vec[i],list_rev[i])
     
     # reverseの為の再帰関数
-    def reverser(self,now_pos,vec,num):
+    def _reverser(self,now_pos,vec,num):
         if num<=0:
             return
         self.board[now_pos[0]][now_pos[1]]=self.turn
-        self.reverser(self.add_vec(now_pos,vec),vec,num-1)
+        self._reverser(self._add_vec(now_pos,vec),vec,num-1)
         return
 
     def erace_marker(self):
@@ -115,7 +115,7 @@ class othello():
     # ゲーム終了判定
     def is_checkmate(self):
         for turn in self.turn_list:
-            if len(self.find_marker(turn))>0:
+            if len(self._find_marker(turn))>0:
                 return False
         return True
     
@@ -132,7 +132,7 @@ class othello():
 
     # パスが必要かどうか
     def is_need_pass(self):
-        return len(self.find_marker(self.turn))==0
+        return len(self._find_marker(self.turn))==0
             
         
 def print_TwoDList(mylists):
