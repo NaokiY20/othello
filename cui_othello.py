@@ -27,22 +27,35 @@ class othello_CUI(othello):
             print('')
         print('')
         return
+    # 入力と設置
     def input_othello(self):
-        input_str=input('どこに置きますか？ 「1,1」のように入力してください(横、縦)\n---')
-        if re.match('\d+,\d+',input_str)==None:
-            print('「1,1」のように入力してください(横、縦)')
-            return -1
-        else:
-            ans=list(map(int,re.findall('\d+',input_str)))
-            # チェスや将棋にならって入れ替える。(入力は横,縦)(実際のデータは縦、横)
-            ans[0],ans[1]=ans[1],ans[0]
-            ans[0]-=1
-            ans[1]-=1
-            if ans[0]>=self.height or ans[1]>=self.width:
-                print('入力された数字が大きすぎます')
+        while True:
+            self.print_board()
+            input_str=input('どこに置きますか？ 「1,1」のように入力してください(横、縦)\n---')
+            if input_str=='q' or input_str=='quit':
                 return -1
+            if re.match('\d+,\d+',input_str)==None:
+                print('「1,1」のように入力してください(横、縦)')
+                continue
+            input_pos=list(map(int,re.findall('\d+',input_str)))
+            # チェスや将棋にならって入れ替える。(入力は横,縦)(実際のデータは縦、横)
+            input_pos[0],input_pos[1]=input_pos[1],input_pos[0]
+            input_pos[0]-=1
+            input_pos[1]-=1
+            if input_pos[0]>=self.height or input_pos[1]>=self.width:
+                print('入力された数字が大きすぎます')
+                continue
+            if self.put(input_pos[0],input_pos[1])==-1:
+                print('そこには置けません')
+                continue
             else:
-                return ans
+                return 0
+    
+    def print_result(self):
+        print('結果')
+        list_stones=self.number_of_stone()
+        for color,stone in list_stones.items():
+            print(self.turn_dict[color]+':'+str(stone))
             
 
         
@@ -52,25 +65,17 @@ def main():
     print('オセロを始めます')
     while True:
         if ot.is_checkmate():
-            print('終わりです\n\n結果')
-            each_number=ot.number_of_stone()
-            for color,stone in each_number.items():
-                print(ot.turn_dict[color]+':'+str(stone))
-            break
+            print('終わりです\n')
+            ot.print_result()
         if not ot.is_need_pass():
             ot.add_marker()
-            # 入力と設置(おそらく一つのメソッドにした方が見やすい)
-            while True:
-                ot.print_board()
-                input_pos=ot.input_othello()
-                if input_pos!=-1:
-                    if ot.put(input_pos[0],input_pos[1])==-1:
-                        print('そこに置けません')
-                        continue
-                    else:
-                        break
+            res=ot.input_othello()
+            if res==-1:
+                print('ゲームを中断します')
+                return
             ot.erace_marker()
         ot.next_turn()
+    return
     
 
 if __name__=='__main__':
