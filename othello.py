@@ -1,8 +1,6 @@
 # 面倒なので、座標系でも表記は統一していない(統一したい)
 
 import numpy
-from queue import Queue
-from copy import deepcopy
 
 class othello():
     def __init__(self,h,w):
@@ -22,11 +20,9 @@ class othello():
         self.board[self.height//2][self.width//2-1]='W'
         self.board[self.height//2-1][self.width//2]='W'
         self.turn='B'
-        self.turn_queue=Queue()
-        self.turn_queue.put('W')
-        self.turn_queue.put('B')
         self.turn_dict={'B':'Black','W':'White'}
         self.turn_list=['B','W']
+        self.turn_index=0
 
     # ベクトル計算
     def add_vec(self,a,b):
@@ -113,21 +109,12 @@ class othello():
                     self.board[y][x]='.'
     
     def next_turn(self):
-        if self.turn_queue.empty():
-            return -1
-        next=self.turn_queue.get()
-        self.turn=next
-        self.turn_queue.put(next)
+        self.turn_index=(self.turn_index+1)%len(self.turn_list)
+        self.turn=self.turn_list[self.turn_index]
 
     # ゲーム終了判定
     def is_checkmate(self):
-        turn_list=[]
-        while not self.turn_queue.empty():
-            turn_list.append(self.turn_queue.get())
-        for turn in turn_list:
-            self.turn_queue.put(turn)
-        
-        for turn in turn_list:
+        for turn in self.turn_list:
             if len(self.find_marker(turn))>0:
                 return False
         return True
