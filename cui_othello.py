@@ -42,9 +42,6 @@ class othello_CUI(othello):
             input_pos[0],input_pos[1]=input_pos[1],input_pos[0]
             input_pos[0]-=1
             input_pos[1]-=1
-            if input_pos[0]>=self.height or input_pos[1]>=self.width:
-                print('入力された数字が大きすぎます')
-                continue
             if self.put(input_pos[0],input_pos[1])==-1:
                 print('そこには置けません')
                 continue
