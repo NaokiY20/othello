@@ -14,6 +14,29 @@ def add_tuple(a,b):
             ans.append(a[i]+b[i])
         return tuple(ans)
 
+class cursor:
+    def __init__(self):
+        self.position=[0,0]
+    
+    def input_key(self,pressed_key):
+        is_pressed=False
+        if pressed_key[K_LEFT]:
+            self.position[1]+=-1
+            is_pressed=True
+        if pressed_key[K_RIGHT]:
+            self.position[1]+=1
+            is_pressed=True
+        if pressed_key[K_UP]:
+            self.position[0]+=-1
+            is_pressed=True
+        if pressed_key[K_DOWN]:
+            self.position[0]+=1
+            is_pressed=True
+        self.position[0]%=config.height_num
+        self.position[1]%=config.width_num
+        if is_pressed:
+            pygame.time.wait(config.cursor_speed)    
+
 class othello_GUI:
     def __init__(self):
         pygame.init()
@@ -26,6 +49,7 @@ class othello_GUI:
         self.line_color=config.line_color
         self.stones_color={'B':config.black_color,'W':config.white_color}
         self.marker_color=config.marker_color
+        self.cursor_color=config.cursor_color
         
         # ボードのマス的な高さと幅
         self.height_num=config.height_num
@@ -68,6 +92,9 @@ class othello_GUI:
                 if now_stone in self.stones_color:
                     pygame.draw.circle(self.screen,self.stones_color[now_stone],self.grid_pos[i][j],int(self.grid_width/2*0.9))
     
+    def draw_cursor(self,position):
+        self.draw_grid(self.cursor_color,self.grid_pos[position[0]][position[1]])
+    
     def _is_exit(self):
         for event in pygame.event.get():
             if event.type==QUIT:
@@ -76,12 +103,17 @@ class othello_GUI:
 
     # プレイヤーからの入力待ち
     def scene_input(self):
+        now_cursor=cursor()
         while True:
-            self.draw_back()
-            self.draw_stones()
-            self.draw_marker()
+            pressed_key=pygame.key.get_pressed()
+            now_cursor.input_key(pressed_key)
 
-            pygame.time.wait(config.fps)
+            self.draw_back()
+            self.draw_marker()
+            self.draw_cursor(now_cursor.position)
+            self.draw_stones()
+
+            # pygame.time.wait(config.fps)
             pygame.display.update()
             self._is_exit()
 
