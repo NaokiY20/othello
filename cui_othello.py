@@ -58,7 +58,7 @@ class othello_CUI(othello):
         
 
 def main():
-    ot=othello_CUI(board_height,board_width)
+    ot=othello_CUI(height_num,width_num)
     print('オセロを始めます')
     while True:
         if ot.is_checkmate():
