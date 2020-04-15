@@ -21,21 +21,32 @@ class othello_GUI:
         pygame.display.set_caption(config.title)
 
         self.othello=othello.othello(config.board_height,config.board_width)
+        # 色
         self.back_green=config.back_green
         self.line_color=config.line_color
+        self.black_color=config.black_color
+        self.white_color=config.white_color
+
         self.line_thick=config.line_thick
+        # ピクセル的な高さと幅(GUI)
+        self.GUIboard_origin=config.GUIboard_origin
+        self.GUIboard_height=config.GUIboard_height
+        self.GUIboard_width=config.GUIboard_width
+        # ボードのマス的な高さと幅
+        self.board_height=config.board_height
+        self.board_width=config.board_width
 
     
     def draw_back(self):
-        self.screen.fill(self.back_green)
-
         # ピクセル的な高さと幅(GUI)
-        origin=config.GUIboard_origin
-        height=config.GUIboard_height
-        width=config.GUIboard_width
+        origin=self.GUIboard_origin
+        height=self.GUIboard_height
+        width=self.GUIboard_width
         # ボードのマス的な高さと幅
-        height_num=config.board_height
-        width_num=config.board_width
+        height_num=self.board_height
+        width_num=self.board_width
+
+        self.screen.fill(self.back_green)
         for i in range(height_num+1):
             add=i*height//height_num
             pygame.draw.line(self.screen,self.line_color,(origin[0],origin[1]+add),(origin[0]+width,origin[1]+add),self.line_thick)
@@ -44,7 +55,20 @@ class othello_GUI:
             pygame.draw.line(self.screen,self.line_color,(origin[0]+add,origin[1]),(origin[0]+add,origin[1]+height),self.line_thick)
 
     def draw_stones(self):
-        pass
+        # ピクセル的な高さと幅(GUI)
+        origin=self.GUIboard_origin
+        height=self.GUIboard_height
+        width=self.GUIboard_width
+        # ボードのマス的な高さと幅
+        height_num=self.board_height
+        width_num=self.board_width
+
+        for i in range(height_num):
+            for j in range(width_num):
+                color=None
+                if self.othello.board[i][j]:
+                    pass
+
 
 
     
