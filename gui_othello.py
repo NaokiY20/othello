@@ -25,17 +25,25 @@ class othello_GUI:
         self.line_color=config.line_color
         self.line_thick=config.line_thick
 
+        # ピクセル的な高さと幅(GUI)
+        self.origin=config.GUIboard_origin
+        self.height=config.GUIboard_height
+        self.width=config.GUIboard_width
+        # ボードのマス的な高さと幅
+        self.height_num=config.board_height
+        self.width_num=config.board_width
+
     
     def draw_back(self):
-        self.screen.fill(self.back_green)
-
         # ピクセル的な高さと幅(GUI)
-        origin=config.GUIboard_origin
-        height=config.GUIboard_height
-        width=config.GUIboard_width
+        origin=self.origin
+        height=self.height
+        width=self.width
         # ボードのマス的な高さと幅
-        height_num=config.board_height
-        width_num=config.board_width
+        height_num=self.height_num
+        width_num=self.width_num
+
+        self.screen.fill(self.back_green)
         for i in range(height_num+1):
             add=i*height//height_num
             pygame.draw.line(self.screen,self.line_color,(origin[0],origin[1]+add),(origin[0]+width,origin[1]+add),self.line_thick)
@@ -44,7 +52,17 @@ class othello_GUI:
             pygame.draw.line(self.screen,self.line_color,(origin[0]+add,origin[1]),(origin[0]+add,origin[1]+height),self.line_thick)
 
     def draw_stones(self):
-        pass
+        # ピクセル的な高さと幅(GUI)
+        origin=self.origin
+        height=self.height
+        width=self.width
+        # ボードのマス的な高さと幅
+        height_num=self.height
+        width_num=self.width
+
+        for i in range(height_num):
+            for j in range(width_num):
+                pass
 
 
     
