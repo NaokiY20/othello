@@ -34,7 +34,7 @@ class othello_CUI(othello):
             input_str=input('どこに置きますか？ 「1,1」のように入力してください(横、縦)\n---')
             if input_str=='q' or input_str=='quit':
                 return -1
-            if re.match('\d+,\d+',input_str)==None:
+            if re.match(r'\d+,\d+',input_str)==None:
                 print('「1,1」のように入力してください(横、縦)')
                 continue
             input_pos=list(map(int,re.findall('\d+',input_str)))
