@@ -74,6 +74,7 @@ class othello_GUI:
                 pygame.quit()
                 sys.exit()
 
+    # プレイヤーからの入力待ち
     def scene_input(self):
         while True:
             self.draw_back()
@@ -83,6 +84,22 @@ class othello_GUI:
             pygame.time.wait(config.fps)
             pygame.display.update()
             self._is_exit()
+
+    # 石を反転させるシーン
+    def scene_reverse(self):
+        pass
+
+    # ターンをパスするシーン
+    def scene_pass(self):
+        pass
+
+    # ターンを開始するシーン(今は実装の予定なし)
+    def scene_start_turn(self):
+        pass
+
+    # ゲーム終了シーン
+    def scene_gameover(self):
+        pass
 
     
     def run(self):
