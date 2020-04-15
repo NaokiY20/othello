@@ -25,6 +25,7 @@ class othello_GUI:
         self.back_green=config.back_green
         self.line_color=config.line_color
         self.stones_color={'B':config.black_color,'W':config.white_color}
+        self.marker_color=config.marker_color
         
         # ボードのマス的な高さと幅
         self.height_num=config.board_height
@@ -53,7 +54,13 @@ class othello_GUI:
     def draw_grid(self,color,center_pos):
         pygame.draw.rect(self.screen,color,Rect(center_pos[0]-self.grid_width//2,center_pos[1]-self.grid_width//2,
                                                 self.grid_width,self.grid_width))
-
+    
+    def draw_marker(self):
+        self.othello.add_marker()
+        for i in range(self.height_num):
+            for j in range(self.width_num):
+                if self.othello.board[i][j]=='R':
+                    self.draw_grid(self.marker_color,self.grid_pos[i][j])
 
     def draw_stones(self):
         for i in range(self.height_num):
@@ -61,20 +68,24 @@ class othello_GUI:
                 now_stone=self.othello.board[i][j]
                 if now_stone in self.stones_color:
                     pygame.draw.circle(self.screen,self.stones_color[now_stone],self.grid_pos[i][j],int(self.grid_width/2*0.9))
+    
+    def _is_exit(self):
+        for event in pygame.event.get():
+            if event.type==QUIT:
+                pygame.quit()
+                sys.exit()
 
     
     def run(self):
         while True:
             self.draw_back()
             self.draw_stones()
+            self.draw_marker()
             # while True:
             #     pass
             pygame.time.wait(config.fps)
             pygame.display.update()
-            for event in pygame.event.get():
-                if event.type==QUIT:
-                    pygame.quit()
-                    sys.exit()
+            self._is_exit()
 
 
 def main():

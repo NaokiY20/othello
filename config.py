@@ -12,6 +12,7 @@ back_green=(0,128,0)
 line_color=(0,0,0)
 black_color=(0,0,0)
 white_color=(255,255,255)
+marker_color=(255,150,150)
 
 GUIboard_origin=[5,5]
 GUIboard_height=700
