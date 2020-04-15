@@ -79,7 +79,7 @@ class othello_GUI:
                                                 self.grid_width,self.grid_width))
     
     def draw_marker(self):
-        self.othello.add_marker()
+        # self.othello.add_marker()
         for i in range(self.height_num):
             for j in range(self.width_num):
                 if self.othello.board[i][j]=='R':
@@ -107,6 +107,8 @@ class othello_GUI:
         while True:
             pressed_key=pygame.key.get_pressed()
             now_cursor.input_key(pressed_key)
+            if pressed_key[K_RETURN]:
+                return now_cursor.position
 
             self.draw_back()
             self.draw_marker()
@@ -136,19 +138,25 @@ class othello_GUI:
     
     def run(self):
         while True:
-            self.draw_back()
-            self.draw_stones()
-            self.draw_marker()
-            # while True:
-            #     pass
-            pygame.time.wait(config.fps)
-            pygame.display.update()
+            is_success=False
+            print(self.othello.turn)
+            self.othello.add_marker()
+            cursor=self.scene_input()
+            res=self.othello.put(cursor[0],cursor[1])
+            pygame.time.wait(100)
+            print(res)
+            if res==0:
+                is_success=True
+            self.othello.erace_marker()
+            if is_success:
+                self.othello.next_turn()
             self._is_exit()
+            
 
 
 def main():
     otGUI=othello_GUI()
-    otGUI.scene_input()
+    otGUI.run()
 
 
 if __name__=='__main__':
