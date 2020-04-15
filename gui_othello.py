@@ -25,38 +25,22 @@ class othello_GUI:
         self.back_green=config.back_green
         self.line_color=config.line_color
         self.stones_color={'B':config.black_color,'W':config.white_color}
-
-        self.line_thick=config.line_thick
-        # ピクセル的な高さと幅(GUI)
-        self.GUIboard_origin=config.GUIboard_origin
-        self.GUIboard_height=config.GUIboard_height
-        self.GUIboard_width=config.GUIboard_width
-        # ボードのマス的な高さと幅
-        self.board_height=config.board_height
-        self.board_width=config.board_width
-
-        # ピクセル的な高さと幅(GUI)
-        self.origin=config.GUIboard_origin
-        self.height=config.GUIboard_height
-        self.width=config.GUIboard_width
+        
         # ボードのマス的な高さと幅
         self.height_num=config.board_height
         self.width_num=config.board_width
 
+        self.origin=config.GUIboard_origin
         self.grid_width=config.grid_width
         
-        self.grid_pos=[]
-        for i in range(self.height_num):
-            tmp=[]
-            radius=self.grid_width/2
-            for j in range(self.width_num):
-                tmp.append((int(self.origin[0]+radius+radius*2*j+self.line_thick*(j+1)),
-                            int(self.origin[1]+radius+radius*2*i+self.line_thick*(i+1))))
-            self.grid_pos.append(tmp)
+        # ボードのグラフィック的特性
+        self.line_thick=config.line_thick
+        radius=self.grid_width/2
+        self.grid_pos=[[(int(self.origin[0]+radius*(2*j+1)+self.line_thick*(j+1)),int(self.origin[1]+radius*(2*i+1)+self.line_thick*(i+1)))
+            for j in range(self.width_num)] for i in range(self.height_num)]
         self.height=self.line_thick*(self.width_num+1)+self.grid_width*self.width_num
         self.width=self.line_thick*(self.height_num+1)+self.grid_width*self.height_num
-
-    
+        
 
     def draw_back(self):
         self.screen.fill(self.back_green)
@@ -95,9 +79,6 @@ class othello_GUI:
 
 def main():
     otGUI=othello_GUI()
-    for i in otGUI.grid_pos:
-        print(i)
-    print('')
     otGUI.run()
     for i in otGUI.grid_pos:
         print(i)
