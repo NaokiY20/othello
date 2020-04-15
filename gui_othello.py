@@ -42,49 +42,49 @@ class othello_GUI:
         # ボードのマス的な高さと幅
         self.height_num=config.board_height
         self.width_num=config.board_width
+
+        self.grid_width=config.grid_width
+        
+        self.grid_pos=[]
+        for i in range(self.height_num):
+            tmp=[]
+            radius=self.grid_width/2
+            for j in range(self.width_num):
+                tmp.append((int(self.origin[0]+radius+radius*2*j+self.line_thick*(j+1)),
+                            int(self.origin[1]+radius+radius*2*i+self.line_thick*(i+1))))
+            self.grid_pos.append(tmp)
+        self.height=self.line_thick*(self.width_num+1)+self.grid_width*self.width_num
+        self.width=self.line_thick*(self.height_num+1)+self.grid_width*self.height_num
+
     
+
     def draw_back(self):
-        # ピクセル的な高さと幅(GUI)
-        origin=self.GUIboard_origin
-        height=self.GUIboard_height
-        width=self.GUIboard_width
-        # ボードのマス的な高さと幅
-        height_num=self.board_height
-        width_num=self.board_width
-
         self.screen.fill(self.back_green)
-        for i in range(height_num+1):
-            add=i*height//height_num
-            pygame.draw.line(self.screen,self.line_color,(origin[0],origin[1]+add),(origin[0]+width,origin[1]+add),self.line_thick)
-        for i in range(width_num+1):
-            add=i*width//width_num
-            pygame.draw.line(self.screen,self.line_color,(origin[0]+add,origin[1]),(origin[0]+add,origin[1]+height),self.line_thick)
+        pygame.draw.rect(self.screen,self.line_color,Rect(self.origin[0],self.origin[1],self.width,self.height))
 
-    # color=str, position=(int,int,int), radius=int
-    def draw_stone(self,color,position,radius):
-        pygame.draw.circle(self.screen,self.stones_color[color],position,radius)
+        for i in range(self.height_num):
+            for j in range(self.width_num):
+                self.draw_grid(self.back_green,self.grid_pos[i][j])
+
+    def draw_grid(self,color,center_pos):
+        pygame.draw.rect(self.screen,color,Rect(center_pos[0]-self.grid_width//2,center_pos[1]-self.grid_width//2,
+                                                self.grid_width,self.grid_width))
+
 
     def draw_stones(self):
-        # ピクセル的な高さと幅(GUI)
-        origin=self.GUIboard_origin
-        height=self.GUIboard_height
-        width=self.GUIboard_width
-        # ボードのマス的な高さと幅
-        height_num=self.board_height
-        width_num=self.board_width
-
-        for i in range(height_num):
-            for j in range(width_num):
-                # 半径は高さのみに依存(楕円にできるようにすべきか)
-                radius=height/height_num/2
-                if self.othello.board[i][j] in self.stones_color:
-                    self.draw_stone(self.othello.board[i][j],(int(origin[0]+radius*(1+2*i)),int(origin[1]+radius*(1+2*j))),int(radius*0.9))
+        for i in range(self.height_num):
+            for j in range(self.width_num):
+                now_stone=self.othello.board[i][j]
+                if now_stone in self.stones_color:
+                    pygame.draw.circle(self.screen,self.stones_color[now_stone],self.grid_pos[i][j],int(self.grid_width/2*0.9))
 
     
     def run(self):
         while True:
             self.draw_back()
             self.draw_stones()
+            # while True:
+            #     pass
             pygame.time.wait(config.fps)
             pygame.display.update()
             for event in pygame.event.get():
@@ -95,7 +95,12 @@ class othello_GUI:
 
 def main():
     otGUI=othello_GUI()
+    for i in otGUI.grid_pos:
+        print(i)
+    print('')
     otGUI.run()
+    for i in otGUI.grid_pos:
+        print(i)
 
 
 if __name__=='__main__':
