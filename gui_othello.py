@@ -20,7 +20,7 @@ class othello_GUI:
         self.screen=pygame.display.set_mode(config.window_large)
         pygame.display.set_caption(config.title)
 
-        self.othello=othello.othello(config.board_height,config.board_width)
+        self.othello=othello.othello(config.height_num,config.width_num)
         # 色
         self.back_green=config.back_green
         self.line_color=config.line_color
@@ -28,24 +28,23 @@ class othello_GUI:
         self.marker_color=config.marker_color
         
         # ボードのマス的な高さと幅
-        self.height_num=config.board_height
-        self.width_num=config.board_width
+        self.height_num=config.height_num
+        self.width_num=config.width_num
 
+        # ボードのグラフィック的特性
         self.origin=config.GUIboard_origin
         self.grid_width=config.grid_width
-        
-        # ボードのグラフィック的特性
         self.line_thick=config.line_thick
         radius=self.grid_width/2
         self.grid_pos=[[(int(self.origin[0]+radius*(2*j+1)+self.line_thick*(j+1)),int(self.origin[1]+radius*(2*i+1)+self.line_thick*(i+1)))
             for j in range(self.width_num)] for i in range(self.height_num)]
-        self.height=self.line_thick*(self.width_num+1)+self.grid_width*self.width_num
-        self.width=self.line_thick*(self.height_num+1)+self.grid_width*self.height_num
+        self.board_height=self.line_thick*(self.width_num+1)+self.grid_width*self.width_num
+        self.board_width=self.line_thick*(self.height_num+1)+self.grid_width*self.height_num
         
 
     def draw_back(self):
         self.screen.fill(self.back_green)
-        pygame.draw.rect(self.screen,self.line_color,Rect(self.origin[0],self.origin[1],self.width,self.height))
+        pygame.draw.rect(self.screen,self.line_color,Rect(self.origin[0],self.origin[1],self.board_width,self.board_height))
 
         for i in range(self.height_num):
             for j in range(self.width_num):
@@ -75,6 +74,16 @@ class othello_GUI:
                 pygame.quit()
                 sys.exit()
 
+    def scene_input(self):
+        while True:
+            self.draw_back()
+            self.draw_stones()
+            self.draw_marker()
+
+            pygame.time.wait(config.fps)
+            pygame.display.update()
+            self._is_exit()
+
     
     def run(self):
         while True:
@@ -90,9 +99,7 @@ class othello_GUI:
 
 def main():
     otGUI=othello_GUI()
-    otGUI.run()
-    for i in otGUI.grid_pos:
-        print(i)
+    otGUI.scene_input()
 
 
 if __name__=='__main__':

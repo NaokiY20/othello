@@ -1,6 +1,6 @@
 
-board_height=8
-board_width=8
+height_num=8
+width_num=8
 
 # GUI
 window_large=(1280,720)
