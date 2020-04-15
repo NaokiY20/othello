@@ -84,7 +84,7 @@ class othello():
         else:
             self.board[y][x]=self.turn
             self.reverse(y,x)
-        return
+        return 0
 
     # (y,x)を中心に、駒を更新する（反転させる）
     def reverse(self,y,x):
