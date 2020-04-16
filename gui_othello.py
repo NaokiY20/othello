@@ -65,7 +65,7 @@ class othello_GUI:
         self.board_height=self.line_thick*(self.width_num+1)+self.grid_width*self.width_num
         self.board_width=self.line_thick*(self.height_num+1)+self.grid_width*self.height_num
 
-        self.draw_status={'marker':False,'cursor':False,'mes_unputable':False}
+        self.draw_status={'marker':False,'cursor':False}
         self.cursor=cursor()
         
 
@@ -97,6 +97,12 @@ class othello_GUI:
     
     def draw_cursor(self):
         self.draw_grid(self.cursor_color,self.grid_pos[self.cursor.position[0]][self.cursor.position[1]])
+    
+    def draw_turn(self):
+        turn_font=pygame.font.SysFont(None,100)
+        message=turn_font.render('Turn',True,(0,0,0))
+        self.screen.blit(message,(1100,100))
+        pygame.draw.circle(self.screen,self.stones_color[self.othello.turn],(1050,100+int(self.grid_width/2*0.9)),int(self.grid_width/2*0.9))
 
     def draw_othello(self):
         self.draw_back()
@@ -105,6 +111,7 @@ class othello_GUI:
         if self.draw_status['cursor']:
             self.draw_cursor()
         self.draw_stones()
+        self.draw_turn()
     
     def _is_exit(self):
         for event in pygame.event.get():
@@ -115,27 +122,21 @@ class othello_GUI:
 
     # プレイヤーからの入力待ち
     def scene_input(self):
+        for key in self.draw_status.keys():
+            self.draw_status[key]=False
         while True:
             pressed_key=pygame.key.get_pressed()
             self.cursor.input_key(pressed_key)
             if pressed_key[K_RETURN]:
-                pygame.time.wait(500)
-                print(self.cursor.position)
-                res=self.othello.put(self.cursor.position[0],self.cursor.position[0])
-                print(res)
-                if res==0:
-                    print("success")
-                    self.draw_status['mes_unputable']=False
+                if self.othello.put(self.cursor.position[0],self.cursor.position[1])==0:
+                    for key in self.draw_status.keys():
+                        self.draw_status[key]=False
                     return 0
-                else:
-                    print("false")
-                    self.draw_status['mes_unputable']=True
             
             self.draw_status['cursor']=True
             self.draw_status['marker']=True
             self.draw_othello()
 
-            # pygame.time.wait(config.fps)
             pygame.display.update()
             self._is_exit()
 
