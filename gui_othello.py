@@ -35,7 +35,7 @@ class cursor:
         self.position[0]%=config.height_num
         self.position[1]%=config.width_num
         if is_pressed:
-            pygame.time.wait(config.cursor_speed)    
+            pygame.time.wait(config.cursor_speed)   
 
 class othello_GUI:
     def __init__(self):
