@@ -32,8 +32,16 @@ class cursor:
         if pressed_key[K_DOWN]:
             self.position[0]+=1
             is_pressed=True
-        self.position[0]%=config.height_num
-        self.position[1]%=config.width_num
+        
+        if self.position[0]<0:
+            self.position[0]=0
+        if self.position[0]>=8:
+            self.position[0]=7
+        if self.position[1]<0:
+            self.position[1]=0
+        if self.position[1]>=8:
+            self.position[1]=7
+        
         if is_pressed:
             pygame.time.wait(config.cursor_speed)   
 
@@ -64,6 +72,13 @@ class othello_GUI:
             for j in range(self.width_num)] for i in range(self.height_num)]
         self.board_height=self.line_thick*(self.width_num+1)+self.grid_width*self.width_num
         self.board_width=self.line_thick*(self.height_num+1)+self.grid_width*self.height_num
+
+        self.draw_status={'marker':False,'cursor':False}
+        self.cursor=cursor()
+
+    def init_draw_status(self):
+        for key in self.draw_status.keys():
+            self.draw_status[key]=False
         
 
     def draw_back(self):
@@ -92,8 +107,23 @@ class othello_GUI:
                 if now_stone in self.stones_color:
                     pygame.draw.circle(self.screen,self.stones_color[now_stone],self.grid_pos[i][j],int(self.grid_width/2*0.9))
     
-    def draw_cursor(self,position):
-        self.draw_grid(self.cursor_color,self.grid_pos[position[0]][position[1]])
+    def draw_cursor(self):
+        self.draw_grid(self.cursor_color,self.grid_pos[self.cursor.position[0]][self.cursor.position[1]])
+    
+    def draw_turn(self):
+        turn_font=pygame.font.SysFont(None,100)
+        message=turn_font.render('Turn',True,(0,0,0))
+        self.screen.blit(message,(1100,100))
+        pygame.draw.circle(self.screen,self.stones_color[self.othello.turn],(1050,100+int(self.grid_width/2*0.9)),int(self.grid_width/2*0.9))
+
+    def draw_othello(self):
+        self.draw_back()
+        if self.draw_status['marker']:
+            self.draw_marker()
+        if self.draw_status['cursor']:
+            self.draw_cursor()
+        self.draw_stones()
+        self.draw_turn()
     
     def _is_exit(self):
         for event in pygame.event.get():
@@ -101,23 +131,28 @@ class othello_GUI:
                 pygame.quit()
                 sys.exit()
 
+
     # プレイヤーからの入力待ち
     def scene_input(self):
-        now_cursor=cursor()
+        self.init_draw_status()
+        self.othello.add_marker()
         while True:
             pressed_key=pygame.key.get_pressed()
-            now_cursor.input_key(pressed_key)
+            self.cursor.input_key(pressed_key)
             if pressed_key[K_RETURN]:
-                return now_cursor.position
+                if self.othello.put(self.cursor.position[0],self.cursor.position[1])==0:
+                    break
+            
+            self.draw_status['cursor']=True
+            self.draw_status['marker']=True
+            self.draw_othello()
 
-            self.draw_back()
-            self.draw_marker()
-            self.draw_cursor(now_cursor.position)
-            self.draw_stones()
-
-            # pygame.time.wait(config.fps)
             pygame.display.update()
             self._is_exit()
+        self.init_draw_status()
+        self.othello.erace_marker()
+        self.othello.next_turn()
+        return 0
 
     # 石を反転させるシーン
     def scene_reverse(self):
@@ -127,29 +162,13 @@ class othello_GUI:
     def scene_pass(self):
         pass
 
-    # ターンを開始するシーン(今は実装の予定なし)
-    def scene_start_turn(self):
-        pass
-
     # ゲーム終了シーン
     def scene_gameover(self):
         pass
-
     
     def run(self):
         while True:
-            is_success=False
-            print(self.othello.turn)
-            self.othello.add_marker()
-            cursor=self.scene_input()
-            res=self.othello.put(cursor[0],cursor[1])
-            pygame.time.wait(100)
-            print(res)
-            if res==0:
-                is_success=True
-            self.othello.erace_marker()
-            if is_success:
-                self.othello.next_turn()
+            self.scene_input()
             self._is_exit()
             
 
