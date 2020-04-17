@@ -32,8 +32,16 @@ class cursor:
         if pressed_key[K_DOWN]:
             self.position[0]+=1
             is_pressed=True
-        self.position[0]%=config.height_num
-        self.position[1]%=config.width_num
+        
+        if self.position[0]<0:
+            self.position[0]=0
+        if self.position[0]>=8:
+            self.position[0]=7
+        if self.position[1]<0:
+            self.position[1]=0
+        if self.position[1]>=8:
+            self.position[1]=7
+        
         if is_pressed:
             pygame.time.wait(config.cursor_speed)   
 
@@ -158,10 +166,8 @@ class othello_GUI:
     
     def run(self):
         while True:
-            print(self.othello.turn)
             self.othello.add_marker()
             self.scene_input()
-            pygame.time.wait(100)
             self.othello.erace_marker()
             self.othello.next_turn()
             self._is_exit()
