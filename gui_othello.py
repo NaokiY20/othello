@@ -75,6 +75,10 @@ class othello_GUI:
 
         self.draw_status={'marker':False,'cursor':False}
         self.cursor=cursor()
+
+    def init_draw_status(self):
+        for key in self.draw_status.keys():
+            self.draw_status[key]=False
         
 
     def draw_back(self):
@@ -130,16 +134,14 @@ class othello_GUI:
 
     # プレイヤーからの入力待ち
     def scene_input(self):
-        for key in self.draw_status.keys():
-            self.draw_status[key]=False
+        self.init_draw_status()
+        self.othello.add_marker()
         while True:
             pressed_key=pygame.key.get_pressed()
             self.cursor.input_key(pressed_key)
             if pressed_key[K_RETURN]:
                 if self.othello.put(self.cursor.position[0],self.cursor.position[1])==0:
-                    for key in self.draw_status.keys():
-                        self.draw_status[key]=False
-                    return 0
+                    break
             
             self.draw_status['cursor']=True
             self.draw_status['marker']=True
@@ -147,6 +149,10 @@ class othello_GUI:
 
             pygame.display.update()
             self._is_exit()
+        self.init_draw_status()
+        self.othello.erace_marker()
+        self.othello.next_turn()
+        return 0
 
     # 石を反転させるシーン
     def scene_reverse(self):
@@ -166,10 +172,7 @@ class othello_GUI:
     
     def run(self):
         while True:
-            self.othello.add_marker()
             self.scene_input()
-            self.othello.erace_marker()
-            self.othello.next_turn()
             self._is_exit()
             
 
