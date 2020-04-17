@@ -43,8 +43,17 @@ class cursor:
             self.position[1]=7
         
         if is_pressed:
-            pygame.time.wait(config.cursor_speed)   
+            pygame.time.wait(config.cursor_speed)
 
+
+class draw_status:
+    def __init__(self):
+        self.status={'marker':False,'cursor':False}
+        
+    def init(self):
+        for key in self.status.keys():
+            self.status[key]=False
+    
 class othello_GUI:
     def __init__(self):
         pygame.init()
@@ -73,13 +82,8 @@ class othello_GUI:
         self.board_height=self.line_thick*(self.width_num+1)+self.grid_width*self.width_num
         self.board_width=self.line_thick*(self.height_num+1)+self.grid_width*self.height_num
 
-        self.draw_status={'marker':False,'cursor':False}
-        self.cursor=cursor()
-
-    def init_draw_status(self):
-        for key in self.draw_status.keys():
-            self.draw_status[key]=False
-        
+        self.draw_status=draw_status()
+        self.cursor=cursor()    
 
     def draw_back(self):
         self.screen.fill(self.back_green)
@@ -118,9 +122,9 @@ class othello_GUI:
 
     def draw_othello(self):
         self.draw_back()
-        if self.draw_status['marker']:
+        if self.draw_status.status['marker']:
             self.draw_marker()
-        if self.draw_status['cursor']:
+        if self.draw_status.status['cursor']:
             self.draw_cursor()
         self.draw_stones()
         self.draw_turn()
@@ -134,7 +138,7 @@ class othello_GUI:
 
     # プレイヤーからの入力待ち
     def scene_input(self):
-        self.init_draw_status()
+        self.draw_status.init()
         self.othello.add_marker()
         while True:
             pressed_key=pygame.key.get_pressed()
@@ -143,13 +147,13 @@ class othello_GUI:
                 if self.othello.put(self.cursor.position[0],self.cursor.position[1])==0:
                     break
             
-            self.draw_status['cursor']=True
-            self.draw_status['marker']=True
+            self.draw_status.status['cursor']=True
+            self.draw_status.status['marker']=True
             self.draw_othello()
 
             pygame.display.update()
             self._is_exit()
-        self.init_draw_status()
+        self.draw_status.init()
         self.othello.erace_marker()
         self.othello.next_turn()
         return 0
