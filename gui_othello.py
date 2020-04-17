@@ -162,10 +162,6 @@ class othello_GUI:
     def scene_pass(self):
         pass
 
-    # ターンを開始するシーン(今は実装の予定なし)
-    def scene_start_turn(self):
-        pass
-
     # ゲーム終了シーン
     def scene_gameover(self):
         pass
