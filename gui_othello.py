@@ -84,6 +84,7 @@ class othello_GUI:
 
         self.draw_status=draw_status()
         self.cursor=cursor()    
+        pygame.key.set_repeat(config.cursor_delay,config.cursor_interval)
 
     def draw_back(self):
         self.screen.fill(self.back_green)
@@ -137,26 +138,44 @@ class othello_GUI:
 
 
     # プレイヤーからの入力待ち
-    def scene_input(self):
+    # def scene_input(self):
+    #     self.draw_status.init()
+    #     self.othello.add_marker()
+    #     while True:
+    #         pressed_key=pygame.key.get_pressed()
+    #         self.cursor.input_key(pressed_key)
+    #         if pressed_key[K_RETURN]:
+    #             if self.othello.put(self.cursor.position[0],self.cursor.position[1])==0:
+    #                 break
+            
+    #         self.draw_status.status['cursor']=True
+    #         self.draw_status.status['marker']=True
+    #         self.draw_othello()
+
+    #         pygame.display.update()
+    #         self._is_exit()
+    #     self.draw_status.init()
+    #     self.othello.erace_marker()
+    #     self.othello.next_turn()
+    #     return 0
+    
+    def scene_input(self):  
         self.draw_status.init()
         self.othello.add_marker()
         while True:
-            pressed_key=pygame.key.get_pressed()
-            self.cursor.input_key(pressed_key)
-            if pressed_key[K_RETURN]:
-                if self.othello.put(self.cursor.position[0],self.cursor.position[1])==0:
-                    break
-            
+            for event in pygame.event.get():
+                if event.type==QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type==KEYDOWN:
+                    print('KEYDOWN')
+                elif event.type==MOUSEBUTTONDOWN:
+                    print('MOUSEBUTTONDOWN')
             self.draw_status.status['cursor']=True
             self.draw_status.status['marker']=True
             self.draw_othello()
-
             pygame.display.update()
-            self._is_exit()
-        self.draw_status.init()
-        self.othello.erace_marker()
-        self.othello.next_turn()
-        return 0
+            # pygame.time.wait(100)
 
     # 石を反転させるシーン
     def scene_reverse(self):
@@ -181,6 +200,10 @@ def main():
     otGUI=othello_GUI()
     otGUI.run()
 
+def main2():
+    otGUI=othello_GUI()
+    otGUI.scene_input()
+
 
 if __name__=='__main__':
-    main()
+    main2()

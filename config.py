@@ -23,4 +23,6 @@ line_thick=2
 grid_height=80
 grid_width=80
 
-cursor_speed=200
+# 連続押しのdelayとinterval
+cursor_delay=500
+cursor_interval=50
