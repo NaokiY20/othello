@@ -21,33 +21,14 @@ class cursor:
     def input_key(self,vec):
         self.position[0]+=vec[0]
         self.position[1]+=vec[1]
-    
-    # def input_key(self,pressed_key):
-    #     is_pressed=False
-    #     if pressed_key[K_LEFT]:
-    #         self.position[1]+=-1
-    #         is_pressed=True
-    #     if pressed_key[K_RIGHT]:
-    #         self.position[1]+=1
-    #         is_pressed=True
-    #     if pressed_key[K_UP]:
-    #         self.position[0]+=-1
-    #         is_pressed=True
-    #     if pressed_key[K_DOWN]:
-    #         self.position[0]+=1
-    #         is_pressed=True
-        
-    #     if self.position[0]<0:
-    #         self.position[0]=0
-    #     if self.position[0]>=8:
-    #         self.position[0]=7
-    #     if self.position[1]<0:
-    #         self.position[1]=0
-    #     if self.position[1]>=8:
-    #         self.position[1]=7
-        
-    #     if is_pressed:
-    #         pygame.time.wait(config.cursor_speed)
+        if self.position[0]<0:
+            self.position[0]=0
+        if self.position[0]>=8:
+            self.position[0]=7
+        if self.position[1]<0:
+            self.position[1]=0
+        if self.position[1]>=8:
+            self.position[1]=7
 
 
 class draw_status:
@@ -139,29 +120,6 @@ class othello_GUI:
             if event.type==QUIT:
                 pygame.quit()
                 sys.exit()
-
-
-    # プレイヤーからの入力待ち
-    # def scene_input(self):
-    #     self.draw_status.init()
-    #     self.othello.add_marker()
-    #     while True:
-    #         pressed_key=pygame.key.get_pressed()
-    #         self.cursor.input_key(pressed_key)
-    #         if pressed_key[K_RETURN]:
-    #             if self.othello.put(self.cursor.position[0],self.cursor.position[1])==0:
-    #                 break
-            
-    #         self.draw_status.status['cursor']=True
-    #         self.draw_status.status['marker']=True
-    #         self.draw_othello()
-
-    #         pygame.display.update()
-    #         self._is_exit()
-    #     self.draw_status.init()
-    #     self.othello.erace_marker()
-    #     self.othello.next_turn()
-    #     return 0
     
     def scene_input(self):  
         self.draw_status.init()
