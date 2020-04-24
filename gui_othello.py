@@ -17,33 +17,37 @@ def add_tuple(a,b):
 class cursor:
     def __init__(self):
         self.position=[0,0]
+
+    def input_key(self,vec):
+        self.position[0]+=vec[0]
+        self.position[1]+=vec[1]
     
-    def input_key(self,pressed_key):
-        is_pressed=False
-        if pressed_key[K_LEFT]:
-            self.position[1]+=-1
-            is_pressed=True
-        if pressed_key[K_RIGHT]:
-            self.position[1]+=1
-            is_pressed=True
-        if pressed_key[K_UP]:
-            self.position[0]+=-1
-            is_pressed=True
-        if pressed_key[K_DOWN]:
-            self.position[0]+=1
-            is_pressed=True
+    # def input_key(self,pressed_key):
+    #     is_pressed=False
+    #     if pressed_key[K_LEFT]:
+    #         self.position[1]+=-1
+    #         is_pressed=True
+    #     if pressed_key[K_RIGHT]:
+    #         self.position[1]+=1
+    #         is_pressed=True
+    #     if pressed_key[K_UP]:
+    #         self.position[0]+=-1
+    #         is_pressed=True
+    #     if pressed_key[K_DOWN]:
+    #         self.position[0]+=1
+    #         is_pressed=True
         
-        if self.position[0]<0:
-            self.position[0]=0
-        if self.position[0]>=8:
-            self.position[0]=7
-        if self.position[1]<0:
-            self.position[1]=0
-        if self.position[1]>=8:
-            self.position[1]=7
+    #     if self.position[0]<0:
+    #         self.position[0]=0
+    #     if self.position[0]>=8:
+    #         self.position[0]=7
+    #     if self.position[1]<0:
+    #         self.position[1]=0
+    #     if self.position[1]>=8:
+    #         self.position[1]=7
         
-        if is_pressed:
-            pygame.time.wait(config.cursor_speed)
+    #     if is_pressed:
+    #         pygame.time.wait(config.cursor_speed)
 
 
 class draw_status:
@@ -168,9 +172,17 @@ class othello_GUI:
                     pygame.quit()
                     sys.exit()
                 elif event.type==KEYDOWN:
-                    print('KEYDOWN')
+                    key_dict={K_UP:(-1,0),K_DOWN:(1,0),K_RIGHT:(0,1),K_LEFT:(0,-1)}
+                    if event.key==K_SPACE or event.key==K_RETURN:
+                        break
+                    elif event.key in key_dict:
+                        self.cursor.input_key(key_dict[event.key])
+                    else:
+                        print('KEYDOWN')
                 elif event.type==MOUSEBUTTONDOWN:
                     print('MOUSEBUTTONDOWN')
+                elif event.type==MOUSEMOTION:
+                    print(event.pos)
             self.draw_status.status['cursor']=True
             self.draw_status.status['marker']=True
             self.draw_othello()
