@@ -17,22 +17,10 @@ def add_tuple(a,b):
 class cursor:
     def __init__(self):
         self.position=[0,0]
-    
-    def input_key(self,pressed_key):
-        is_pressed=False
-        if pressed_key[K_LEFT]:
-            self.position[1]+=-1
-            is_pressed=True
-        if pressed_key[K_RIGHT]:
-            self.position[1]+=1
-            is_pressed=True
-        if pressed_key[K_UP]:
-            self.position[0]+=-1
-            is_pressed=True
-        if pressed_key[K_DOWN]:
-            self.position[0]+=1
-            is_pressed=True
-        
+
+    def input_key(self,vec):
+        self.position[0]+=vec[0]
+        self.position[1]+=vec[1]
         if self.position[0]<0:
             self.position[0]=0
         if self.position[0]>=8:
@@ -41,9 +29,15 @@ class cursor:
             self.position[1]=0
         if self.position[1]>=8:
             self.position[1]=7
-        
-        if is_pressed:
-            pygame.time.wait(config.cursor_speed)
+    
+    def input_mouse(self,mouse_pos):
+        origin=config.GUIboard_origin
+        grid_width=config.grid_width
+        height_num=config.height_num
+        width_num=config.width_num
+        if 0<mouse_pos[0]-origin[0]<grid_width*width_num and 0<mouse_pos[1]-origin[1]<grid_width*height_num:
+            self.position[1]=(mouse_pos[0]-origin[0])//grid_width
+            self.position[0]=(mouse_pos[1]-origin[1])//grid_width
 
 
 class draw_status:
@@ -84,6 +78,7 @@ class othello_GUI:
 
         self.draw_status=draw_status()
         self.cursor=cursor()    
+        pygame.key.set_repeat(config.cursor_delay,config.cursor_interval)
 
     def draw_back(self):
         self.screen.fill(self.back_green)
@@ -134,25 +129,38 @@ class othello_GUI:
             if event.type==QUIT:
                 pygame.quit()
                 sys.exit()
-
-
-    # プレイヤーからの入力待ち
-    def scene_input(self):
+    
+    def scene_input(self):  
         self.draw_status.init()
         self.othello.add_marker()
-        while True:
-            pressed_key=pygame.key.get_pressed()
-            self.cursor.input_key(pressed_key)
-            if pressed_key[K_RETURN]:
-                if self.othello.put(self.cursor.position[0],self.cursor.position[1])==0:
-                    break
-            
+        Loop_FIN=False
+        while Loop_FIN==False:
+            for event in pygame.event.get():
+                if event.type==QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type==KEYDOWN:
+                    key_dict={K_UP:(-1,0),K_DOWN:(1,0),K_RIGHT:(0,1),K_LEFT:(0,-1)}
+                    if event.key==K_SPACE or event.key==K_RETURN:
+                        if self.othello.put(self.cursor.position[0],self.cursor.position[1])==0:
+                            Loop_FIN=True
+                            break
+                    elif event.key in key_dict:
+                        self.cursor.input_key(key_dict[event.key])
+                    else:
+                        print('KEYDOWN')
+                elif event.type==MOUSEBUTTONDOWN:
+                    if self.othello.put(self.cursor.position[0],self.cursor.position[1])==0:
+                        Loop_FIN=True
+                        break
+                elif event.type==MOUSEMOTION:
+                    self.cursor.input_mouse(event.pos)
+                    print(event.pos)
             self.draw_status.status['cursor']=True
             self.draw_status.status['marker']=True
             self.draw_othello()
-
             pygame.display.update()
-            self._is_exit()
+            # pygame.time.wait(100)
         self.draw_status.init()
         self.othello.erace_marker()
         self.othello.next_turn()
@@ -180,6 +188,10 @@ class othello_GUI:
 def main():
     otGUI=othello_GUI()
     otGUI.run()
+
+def main2():
+    otGUI=othello_GUI()
+    otGUI.scene_input()
 
 
 if __name__=='__main__':
