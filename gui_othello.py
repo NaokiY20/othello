@@ -29,6 +29,15 @@ class cursor:
             self.position[1]=0
         if self.position[1]>=8:
             self.position[1]=7
+    
+    def input_mouse(self,mouse_pos):
+        origin=config.GUIboard_origin
+        grid_width=config.grid_width
+        height_num=config.height_num
+        width_num=config.width_num
+        if 0<mouse_pos[0]-origin[0]<grid_width*width_num and 0<mouse_pos[1]-origin[1]<grid_width*height_num:
+            self.position[1]=(mouse_pos[0]-origin[0])//grid_width
+            self.position[0]=(mouse_pos[1]-origin[1])//grid_width
 
 
 class draw_status:
@@ -145,6 +154,7 @@ class othello_GUI:
                         Loop_FIN=True
                         break
                 elif event.type==MOUSEMOTION:
+                    self.cursor.input_mouse(event.pos)
                     print(event.pos)
             self.draw_status.status['cursor']=True
             self.draw_status.status['marker']=True
