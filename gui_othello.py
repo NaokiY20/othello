@@ -128,6 +128,19 @@ class othello_GUI:
         font=pygame.font.SysFont(None,200)
         message=font.render('PASS',True,self.stones_color[self.othello.turn])
         self.screen.blit(message,(800,300))
+
+    def draw_finish(self):
+        font=pygame.font.SysFont(None,160)
+        message=font.render('GAME SET',True,(0,0,0))
+        self.screen.blit(message,(680,280))
+        
+        num=self.othello.number_of_stone()
+        font=pygame.font.SysFont(None,140)
+        mess_black=font.render('BLACK :'+str(num['B']),True,(0,0,0))
+        mess_white=font.render('WHITE :'+str(num['W']),True,(255,255,255))
+        self.screen.blit(mess_black,(730,400))
+        self.screen.blit(mess_white,(730,500))
+        
     
     def _is_exit(self):
         for event in pygame.event.get():
@@ -185,10 +198,21 @@ class othello_GUI:
 
     # ゲーム終了シーン
     def scene_gameover(self):
-        pass
+        self.draw_status.init()
+        while True:
+            for event in pygame.event.get():
+                if event.type==QUIT:
+                    pygame.quit()
+                    sys.exit()
+            self.draw_othello()
+            self.draw_finish()
+            pygame.display.update()
     
     def run(self):
         while True:
+            if self.othello.is_checkmate():
+                self.scene_gameover()
+                return
             if self.othello.is_need_pass():
                 self.scene_pass()
             else:
@@ -203,7 +227,7 @@ def main():
 
 def main2():
     otGUI=othello_GUI()
-    otGUI.scene_pass()
+    otGUI.scene_gameover()
 
 
 if __name__=='__main__':
