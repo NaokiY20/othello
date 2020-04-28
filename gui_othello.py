@@ -123,6 +123,24 @@ class othello_GUI:
             self.draw_cursor()
         self.draw_stones()
         self.draw_turn()
+
+    def draw_pass(self):
+        font=pygame.font.SysFont(None,200)
+        message=font.render('PASS',True,self.stones_color[self.othello.turn])
+        self.screen.blit(message,(800,300))
+
+    def draw_finish(self):
+        font=pygame.font.SysFont(None,160)
+        message=font.render('GAME SET',True,(0,0,0))
+        self.screen.blit(message,(680,280))
+        
+        num=self.othello.number_of_stone()
+        font=pygame.font.SysFont(None,140)
+        mess_black=font.render('BLACK :'+str(num['B']),True,(0,0,0))
+        mess_white=font.render('WHITE :'+str(num['W']),True,(255,255,255))
+        self.screen.blit(mess_black,(730,400))
+        self.screen.blit(mess_white,(730,500))
+        
     
     def _is_exit(self):
         for event in pygame.event.get():
@@ -148,14 +166,13 @@ class othello_GUI:
                     elif event.key in key_dict:
                         self.cursor.input_key(key_dict[event.key])
                     else:
-                        print('KEYDOWN')
+                        pass
                 elif event.type==MOUSEBUTTONDOWN:
                     if self.othello.put(self.cursor.position[0],self.cursor.position[1])==0:
                         Loop_FIN=True
                         break
                 elif event.type==MOUSEMOTION:
                     self.cursor.input_mouse(event.pos)
-                    print(event.pos)
             self.draw_status.status['cursor']=True
             self.draw_status.status['marker']=True
             self.draw_othello()
@@ -172,15 +189,34 @@ class othello_GUI:
 
     # ターンをパスするシーン
     def scene_pass(self):
-        pass
+        self.draw_status.init()
+        self.draw_othello()
+        self.draw_pass()
+        pygame.display.update()
+        pygame.time.wait(1000)
+        self.othello.next_turn()
 
     # ゲーム終了シーン
     def scene_gameover(self):
-        pass
+        self.draw_status.init()
+        while True:
+            for event in pygame.event.get():
+                if event.type==QUIT:
+                    pygame.quit()
+                    sys.exit()
+            self.draw_othello()
+            self.draw_finish()
+            pygame.display.update()
     
     def run(self):
         while True:
-            self.scene_input()
+            if self.othello.is_checkmate():
+                self.scene_gameover()
+                return
+            if self.othello.is_need_pass():
+                self.scene_pass()
+            else:
+                self.scene_input()
             self._is_exit()
             
 
@@ -191,7 +227,7 @@ def main():
 
 def main2():
     otGUI=othello_GUI()
-    otGUI.scene_input()
+    otGUI.scene_gameover()
 
 
 if __name__=='__main__':
