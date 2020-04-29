@@ -26,3 +26,24 @@ grid_width=80
 # 連続押しのdelayとinterval
 cursor_delay=500
 cursor_interval=50
+
+magnification=1.0
+def resize(value):
+    if(type(value)==tuple):
+        tmp=list(value)
+        ans=[]
+        for i in tmp:
+            ans.append(int(i*magnification))
+        return tuple(ans)
+    if(type(value)==list):
+        ans=[]
+        for i in value:
+            ans.append(int(i*magnification))
+        return ans
+    else:
+        return int(value*magnification)
+
+window_large=resize(window_large)
+line_thick=resize(line_thick)
+grid_height=resize(grid_height)
+grid_width=resize(grid_width)
