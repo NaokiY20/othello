@@ -27,6 +27,7 @@ grid_width=80
 cursor_delay=500
 cursor_interval=50
 
+# 画面の大きさ　1.0:1280x720
 magnification=1.0
 def resize(value):
     if(type(value)==tuple):
