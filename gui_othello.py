@@ -110,10 +110,10 @@ class othello_GUI:
         self.draw_grid(self.cursor_color,self.grid_pos[self.cursor.position[0]][self.cursor.position[1]])
     
     def draw_turn(self):
-        turn_font=pygame.font.SysFont(None,100)
+        turn_font=pygame.font.SysFont(None,config.resize(100))
         message=turn_font.render('Turn',True,(0,0,0))
-        self.screen.blit(message,(1100,100))
-        pygame.draw.circle(self.screen,self.stones_color[self.othello.turn],(1050,100+int(self.grid_width/2*0.9)),int(self.grid_width/2*0.9))
+        self.screen.blit(message,config.resize((1100,100)))
+        pygame.draw.circle(self.screen,self.stones_color[self.othello.turn],config.resize((1050,100+int(self.grid_width/2*0.9))),int(self.grid_width/2*0.9))
 
     def draw_othello(self):
         self.draw_back()
@@ -125,21 +125,21 @@ class othello_GUI:
         self.draw_turn()
 
     def draw_pass(self):
-        font=pygame.font.SysFont(None,200)
+        font=pygame.font.SysFont(None,config.resize(200))
         message=font.render('PASS',True,self.stones_color[self.othello.turn])
-        self.screen.blit(message,(800,300))
+        self.screen.blit(message,config.resize((800,300)))
 
     def draw_finish(self):
-        font=pygame.font.SysFont(None,160)
+        font=pygame.font.SysFont(None,config.resize(160))
         message=font.render('GAME SET',True,(0,0,0))
-        self.screen.blit(message,(680,280))
+        self.screen.blit(message,config.resize((680,280)))
         
         num=self.othello.number_of_stone()
-        font=pygame.font.SysFont(None,140)
+        font=pygame.font.SysFont(None,config.resize(140))
         mess_black=font.render('BLACK :'+str(num['B']),True,(0,0,0))
         mess_white=font.render('WHITE :'+str(num['W']),True,(255,255,255))
-        self.screen.blit(mess_black,(730,400))
-        self.screen.blit(mess_white,(730,500))
+        self.screen.blit(mess_black,config.resize((730,400)))
+        self.screen.blit(mess_white,config.resize((730,500)))
         
     
     def _is_exit(self):
@@ -227,7 +227,7 @@ def main():
 
 def main2():
     otGUI=othello_GUI()
-    otGUI.scene_gameover()
+    otGUI.scene_pass()
 
 
 if __name__=='__main__':
